@@ -12,10 +12,12 @@ public class Dados implements Serializable {
 
     private ArrayList<Evento> eventos;
     private ArrayList<Categoria> categorias;
+    private ArrayList<Comentario> comentarios;
 
     public Dados() {
         eventos = new ArrayList<Evento>();
         categorias = new ArrayList<Categoria>();
+        comentarios = new ArrayList<Comentario>();
     }
 
     public ArrayList<Evento> getEventos() {
@@ -24,6 +26,13 @@ public class Dados implements Serializable {
 
     public ArrayList<Categoria> getCategorias() {
         return categorias;
+    }
+
+    public ArrayList<Comentario> getComentarios() {
+        if (comentarios == null) {
+            comentarios = new ArrayList<Comentario>();
+        }
+        return comentarios;
     }
 
     public void salvar() {
