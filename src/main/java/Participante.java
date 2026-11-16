@@ -1,4 +1,4 @@
-import java.io.Serializable
+import java.io.Serializable;
 
 public class Participante implements Serializable {
 
@@ -9,52 +9,54 @@ public class Participante implements Serializable {
     private String email;
     private String senha;
 
-    public Participante(){
+    public Participante() {
     }
 
-    public Participante(int id, String nome, String email, String senha){
+    public Participante(int id, String nome, String email, String senha) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getNome(){
+    public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome){
+    public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public String getEmail(){
+    public String getEmail() {
         return email;
     }
 
-    public void settEmail(String email){
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getSenha(){
+    public String getSenha() {
         return senha;
     }
 
-    public void setSenha(String Senha){
+    public void setSenha(String senha) {
         this.senha = senha;
     }
 
-    public  boolean validarLogin(String identificador, String senhaInformada){
-        return indentificador ! = null
-                && senhaInformada ! = null
-                && (email.equalsIgnoreCase(identificador))
+    public boolean validarLogin(String identificador, String senhaInformada) {
+        return identificador != null
+                && senhaInformada != null
+                && email != null
+                && senha != null
+                && (email.equalsIgnoreCase(identificador)
                 || String.valueOf(id).equals(identificador))
                 && senha.equals(senhaInformada);
     }

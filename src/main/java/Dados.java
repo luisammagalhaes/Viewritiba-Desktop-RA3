@@ -20,6 +20,14 @@ public class Dados implements Serializable {
     private ArrayList<Favorito> favoritos;
     private ArrayList<Compartilhamento> compartilhamentos;
 
+    // CRUDs de Locais e Patrocinadores
+    private ArrayList<Local> locais;
+    private ArrayList<Patrocinador> patrocinadores;
+
+    // CRUDs de Participantes e Detalhes de Eventos
+    private ArrayList<Participante> participantes;
+    private ArrayList<DetalhesEvento> detalhesEventos;
+
     public Dados() {
         eventos = new ArrayList<Evento>();
         categorias = new ArrayList<Categoria>();
@@ -28,13 +36,25 @@ public class Dados implements Serializable {
 
         favoritos = new ArrayList<Favorito>();
         compartilhamentos = new ArrayList<Compartilhamento>();
+
+        locais = new ArrayList<Local>();
+        patrocinadores = new ArrayList<Patrocinador>();
+
+        participantes = new ArrayList<Participante>();
+        detalhesEventos = new ArrayList<DetalhesEvento>();
     }
 
     public ArrayList<Evento> getEventos() {
+        if (eventos == null) {
+            eventos = new ArrayList<Evento>();
+        }
         return eventos;
     }
 
     public ArrayList<Categoria> getCategorias() {
+        if (categorias == null) {
+            categorias = new ArrayList<Categoria>();
+        }
         return categorias;
     }
 
@@ -64,6 +84,34 @@ public class Dados implements Serializable {
             compartilhamentos = new ArrayList<Compartilhamento>();
         }
         return compartilhamentos;
+    }
+
+    public ArrayList<Local> getLocais() {
+        if (locais == null) {
+            locais = new ArrayList<Local>();
+        }
+        return locais;
+    }
+
+    public ArrayList<Patrocinador> getPatrocinadores() {
+        if (patrocinadores == null) {
+            patrocinadores = new ArrayList<Patrocinador>();
+        }
+        return patrocinadores;
+    }
+
+    public ArrayList<Participante> getParticipantes() {
+        if (participantes == null) {
+            participantes = new ArrayList<Participante>();
+        }
+        return participantes;
+    }
+
+    public ArrayList<DetalhesEvento> getDetalhesEventos() {
+        if (detalhesEventos == null) {
+            detalhesEventos = new ArrayList<DetalhesEvento>();
+        }
+        return detalhesEventos;
     }
 
     public void salvar() {
