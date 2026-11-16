@@ -8,9 +8,6 @@ public class Evento implements Serializable {
     private String local;
     private Categoria categoria;
 
-    public Evento() {
-    }
-
     public Evento(int id, String titulo, String descricao,
                   String dataHora, String local, Categoria categoria) {
         this.id = id;

@@ -1,13 +1,11 @@
 import java.io.Serializable;
 
 public class Categoria implements Serializable {
+
     private int id;
     private String nome;
     private String descricao;
     private String publicoAlvo;
-
-    public Categoria() {
-    }
 
     public Categoria(int id, String nome, String descricao, String publicoAlvo) {
         this.id = id;

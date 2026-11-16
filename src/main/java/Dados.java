@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 public class Dados implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     private ArrayList<Evento> eventos;
     private ArrayList<Categoria> categorias;
 
@@ -38,9 +36,7 @@ public class Dados implements Serializable {
             gravador.close();
 
         } catch (Exception erro) {
-            System.out.println(
-                    "Erro ao salvar os dados: " + erro.getMessage()
-            );
+            System.out.println("Erro ao salvar os dados.");
         }
     }
 
@@ -61,10 +57,7 @@ public class Dados implements Serializable {
             return new Dados();
 
         } catch (Exception erro) {
-            System.out.println(
-                    "Erro ao carregar os dados: " + erro.getMessage()
-            );
-
+            System.out.println("Erro ao carregar os dados.");
             return new Dados();
         }
     }
