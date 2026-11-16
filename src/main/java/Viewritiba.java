@@ -39,6 +39,13 @@ public class Viewritiba extends Application {
             telaCategoria.mostrar();
         });
 
+        botaoEventos.setOnAction(evento -> {
+            TelaEvento telaEvento =
+                    new TelaEvento(dados);
+
+            telaEvento.mostrar();
+        });
+
         // Painel que organiza os elementos
         VBox painel = new VBox(15);
         painel.setAlignment(Pos.CENTER);

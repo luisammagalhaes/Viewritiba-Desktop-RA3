@@ -219,3 +219,57 @@
 .botao-excluir:hover {
     -fx-background-color: #ffd8d8;
 }
+
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #e6dad5;
+    -fx-border-radius: 13;
+    -fx-background-radius: 13;
+    -fx-padding: 5 8;
+    -fx-font-size: 14px;
+}
+
+.combo-box:focused {
+    -fx-border-color: #ff7057;
+    -fx-border-width: 2;
+}
+
+.formulario-evento {
+    -fx-max-width: 680;
+}
+
+.botao-pesquisa {
+    -fx-min-width: 105;
+    -fx-padding: 11 15;
+    -fx-font-size: 13px;
+}
+
+.botao-limpar {
+    -fx-background-color: #f2f2f4;
+    -fx-text-fill: #374151;
+    -fx-effect: none;
+}
+
+.botao-limpar:hover {
+    -fx-background-color: #e5e5e9;
+}
+
+.list-cell {
+    -fx-wrap-text: true;
+    -fx-padding: 12;
+}
+
+.cabecalho-tabela {
+    -fx-background-color: #222222;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8;
+    -fx-border-color: #e9e0dc;
+}
+
+.celula-tabela {
+    -fx-background-color: #fffaf8;
+    -fx-text-fill: #242424;
+    -fx-padding: 8;
+    -fx-border-color: #e9e0dc;
+}

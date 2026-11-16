@@ -28,25 +28,20 @@ public class TelaCategoria {
     public void mostrar() {
         Stage janelaCategoria = new Stage();
 
-        Label titulo =
-                new Label("Gerenciamento de categorias");
-
+        Label titulo = new Label("Gerenciamento de categorias");
         titulo.getStyleClass().add("titulo-tela");
 
         Label nome = new Label("Nome:");
-
         campoNome = new TextField();
         campoNome.setPromptText("Exemplo: Gastronomia");
 
         Label descricao = new Label("Descrição:");
-
         campoDescricao = new TextField();
         campoDescricao.setPromptText(
                 "Digite uma descrição para a categoria"
         );
 
         Label publicoAlvo = new Label("Público-alvo:");
-
         campoPublicoAlvo = new TextField();
         campoPublicoAlvo.setPromptText(
                 "Exemplo: Jovens e adultos"
@@ -173,7 +168,8 @@ public class TelaCategoria {
     }
 
     private void carregarSelecionada() {
-        Categoria categoria = obterCategoriaSelecionada();
+        Categoria categoria =
+                obterCategoriaSelecionada();
 
         if (categoria == null) {
             return;
@@ -181,8 +177,14 @@ public class TelaCategoria {
 
         categoriaEmAlteracao = categoria;
 
-        campoNome.setText(categoria.getNome());
-        campoDescricao.setText(categoria.getDescricao());
+        campoNome.setText(
+                categoria.getNome()
+        );
+
+        campoDescricao.setText(
+                categoria.getDescricao()
+        );
+
         campoPublicoAlvo.setText(
                 categoria.getPublicoAlvo()
         );
@@ -230,7 +232,8 @@ public class TelaCategoria {
     }
 
     private void excluir() {
-        Categoria categoria = obterCategoriaSelecionada();
+        Categoria categoria =
+                obterCategoriaSelecionada();
 
         if (categoria == null) {
             return;
@@ -252,10 +255,9 @@ public class TelaCategoria {
     }
 
     private Categoria obterCategoriaSelecionada() {
-        int indice =
-                listaCategorias
-                        .getSelectionModel()
-                        .getSelectedIndex();
+        int indice = listaCategorias
+                .getSelectionModel()
+                .getSelectedIndex();
 
         if (
                 indice < 0 ||
@@ -273,7 +275,9 @@ public class TelaCategoria {
 
     private boolean camposPreenchidos() {
         String nome = campoNome.getText().trim();
-        String descricao = campoDescricao.getText().trim();
+        String descricao =
+                campoDescricao.getText().trim();
+
         String publicoAlvo =
                 campoPublicoAlvo.getText().trim();
 
@@ -305,7 +309,10 @@ public class TelaCategoria {
     private void atualizarLista() {
         listaCategorias.getItems().clear();
 
-        for (Categoria categoria : dados.getCategorias()) {
+        for (
+                Categoria categoria :
+                dados.getCategorias()
+        ) {
             String item =
                     categoria.getId() + " | " +
                             categoria.getNome() + " | " +
@@ -325,7 +332,10 @@ public class TelaCategoria {
     private int gerarId() {
         int maiorId = 0;
 
-        for (Categoria categoria : dados.getCategorias()) {
+        for (
+                Categoria categoria :
+                dados.getCategorias()
+        ) {
             if (categoria.getId() > maiorId) {
                 maiorId = categoria.getId();
             }
