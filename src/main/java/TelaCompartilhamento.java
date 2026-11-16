@@ -197,6 +197,13 @@ public class TelaCompartilhamento {
                     remetente, destinatario, mensagem
             );
 
+            if (!eventoExiste(evento)) {
+                throw new IllegalArgumentException(
+                        "O evento informado não existe."
+                );
+            }
+
+
             // Gerar um ID automaticamente
             int novoId = 1;
 
@@ -256,6 +263,13 @@ public class TelaCompartilhamento {
             validarCompartilhamento(
                     remetente, destinatario, mensagem
             );
+
+            if (!eventoExiste(evento)) {
+                throw new IllegalArgumentException(
+                        "O evento informado não existe."
+                );
+            }
+
 
             selecionado.setIdEvento(evento);
             selecionado.setIdRemetente(remetente);
@@ -323,23 +337,41 @@ public class TelaCompartilhamento {
     }
 
     // Regras de compartilhamento
+
     private void validarCompartilhamento(
             int remetente,
             int destinatario,
             String mensagem
     ) {
+        // Verifica se o remetente existe
+        if (!contaExiste(remetente)) {
+            throw new IllegalArgumentException(
+                    "O remetente informado não está cadastrado."
+            );
+        }
+
+        // Verifica se o destinatário existe
+        if (!contaExiste(destinatario)) {
+            throw new IllegalArgumentException(
+                    "O destinatário informado não está cadastrado."
+            );
+        }
+
+        // Impede compartilhar consigo mesmo
         if (remetente == destinatario) {
             throw new IllegalArgumentException(
                     "O remetente não pode compartilhar consigo mesmo."
             );
         }
 
+        // Limita a mensagem a 200 caracteres
         if (mensagem.length() > 200) {
             throw new IllegalArgumentException(
                     "A mensagem deve ter no máximo 200 caracteres."
             );
         }
     }
+
 
     // Limpar formulário
     private void limparCampos() {
@@ -365,4 +397,26 @@ public class TelaCompartilhamento {
         alerta.setHeaderText("Erro");
         alerta.showAndWait();
     }
+
+    private boolean eventoExiste(int idEvento) {
+        for (Evento evento : dados.getEventos()) {
+            if (evento.getId() == idEvento) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private boolean contaExiste(int idConta) {
+        for (Conta conta : dados.getContas()) {
+            if (conta.getId() == idConta) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 }
