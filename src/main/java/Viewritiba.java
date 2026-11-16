@@ -1,3 +1,4 @@
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -35,11 +36,18 @@ public class Viewritiba extends Application {
         Button botaoContas =
                 new Button("Gerenciar contas");
 
-        botaoContas.setOnAction(evento -> {
-            TelaConta telaConta =
-                    new TelaConta(dados);
+        Button botaoFavoritos =
+                new Button("Gerenciar favoritos");
 
-            telaConta.mostrar();
+        Button botaoCompartilhamentos =
+                new Button("Gerenciar compartilhamentos");
+
+        // Ações dos botões
+        botaoEventos.setOnAction(evento -> {
+            TelaEvento telaEvento =
+                    new TelaEvento(dados);
+
+            telaEvento.mostrar();
         });
 
         botaoCategorias.setOnAction(evento -> {
@@ -49,11 +57,25 @@ public class Viewritiba extends Application {
             telaCategoria.mostrar();
         });
 
-        botaoEventos.setOnAction(evento -> {
-            TelaEvento telaEvento =
-                    new TelaEvento(dados);
+        botaoContas.setOnAction(evento -> {
+            TelaConta telaConta =
+                    new TelaConta(dados);
 
-            telaEvento.mostrar();
+            telaConta.mostrar();
+        });
+
+        botaoFavoritos.setOnAction(evento -> {
+            TelaFavorito telaFavorito =
+                    new TelaFavorito(dados);
+
+            telaFavorito.mostrar();
+        });
+
+        botaoCompartilhamentos.setOnAction(evento -> {
+            TelaCompartilhamento telaCompartilhamento =
+                    new TelaCompartilhamento(dados);
+
+            telaCompartilhamento.mostrar();
         });
 
         // Painel que organiza os elementos
@@ -61,11 +83,15 @@ public class Viewritiba extends Application {
         painel.setAlignment(Pos.CENTER);
         painel.getStyleClass().add("cartao");
 
-        painel.getChildren().add(titulo);
-        painel.getChildren().add(subtitulo);
-        painel.getChildren().add(botaoEventos);
-        painel.getChildren().add(botaoCategorias);
-        painel.getChildren().add(botaoContas);
+        painel.getChildren().addAll(
+                titulo,
+                subtitulo,
+                botaoEventos,
+                botaoCategorias,
+                botaoContas,
+                botaoFavoritos,
+                botaoCompartilhamentos
+        );
 
         // Fundo da tela
         BorderPane fundo = new BorderPane();

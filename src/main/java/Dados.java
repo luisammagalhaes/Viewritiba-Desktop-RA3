@@ -1,3 +1,4 @@
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,16 +9,25 @@ import java.util.ArrayList;
 
 public class Dados implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private ArrayList<Evento> eventos;
     private ArrayList<Categoria> categorias;
     private ArrayList<Comentario> comentarios;
     private ArrayList<Conta> contas;
+
+    // CRUDs de Favoritos e Compartilhamentos
+    private ArrayList<Favorito> favoritos;
+    private ArrayList<Compartilhamento> compartilhamentos;
 
     public Dados() {
         eventos = new ArrayList<Evento>();
         categorias = new ArrayList<Categoria>();
         comentarios = new ArrayList<Comentario>();
         contas = new ArrayList<Conta>();
+
+        favoritos = new ArrayList<Favorito>();
+        compartilhamentos = new ArrayList<Compartilhamento>();
     }
 
     public ArrayList<Evento> getEventos() {
@@ -40,6 +50,20 @@ public class Dados implements Serializable {
             contas = new ArrayList<Conta>();
         }
         return contas;
+    }
+
+    public ArrayList<Favorito> getFavoritos() {
+        if (favoritos == null) {
+            favoritos = new ArrayList<Favorito>();
+        }
+        return favoritos;
+    }
+
+    public ArrayList<Compartilhamento> getCompartilhamentos() {
+        if (compartilhamentos == null) {
+            compartilhamentos = new ArrayList<Compartilhamento>();
+        }
+        return compartilhamentos;
     }
 
     public void salvar() {
