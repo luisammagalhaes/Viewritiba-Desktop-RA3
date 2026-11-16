@@ -2,8 +2,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -12,118 +12,106 @@ public class TelaCategoria {
 
     private Dados dados;
 
-    private TextField campoNome;
-    private TextField campoDescricao;
-    private TextField campoPublicoAlvo;
+    private TextField id = new TextField();
+    private TextField nome = new TextField();
+    private TextField descricao = new TextField();
+    private TextField publicoAlvo = new TextField();
 
-    private Label mensagem;
-    private ListView<String> listaCategorias;
-
-    private Categoria categoriaEmAlteracao;
+    private Label mensagem = new Label();
+    private GridPane tabela = new GridPane();
 
     public TelaCategoria(Dados dados) {
         this.dados = dados;
     }
 
     public void mostrar() {
-        Stage janelaCategoria = new Stage();
+        Stage janela = new Stage();
 
         Label titulo = new Label("Gerenciamento de categorias");
         titulo.getStyleClass().add("titulo-tela");
 
-        Label nome = new Label("Nome:");
-        campoNome = new TextField();
-        campoNome.setPromptText("Exemplo: Gastronomia");
+        GridPane formulario = new GridPane();
+        formulario.setHgap(10);
+        formulario.setVgap(10);
 
-        Label descricao = new Label("Descrição:");
-        campoDescricao = new TextField();
-        campoDescricao.setPromptText(
-                "Digite uma descrição para a categoria"
+        adicionarCampo(
+                formulario,
+                "ID para consultar, alterar ou excluir:",
+                id,
+                0
         );
 
-        Label publicoAlvo = new Label("Público-alvo:");
-        campoPublicoAlvo = new TextField();
-        campoPublicoAlvo.setPromptText(
-                "Exemplo: Jovens e adultos"
+        adicionarCampo(
+                formulario,
+                "Nome:",
+                nome,
+                1
         );
 
-        Button botaoCadastrar =
-                new Button("Cadastrar categoria");
+        adicionarCampo(
+                formulario,
+                "Descrição:",
+                descricao,
+                2
+        );
 
-        mensagem = new Label();
-        mensagem.getStyleClass().add("mensagem");
+        adicionarCampo(
+                formulario,
+                "Público-alvo:",
+                publicoAlvo,
+                3
+        );
 
-        Label tituloLista =
-                new Label("Categorias cadastradas");
+        Button cadastrar = new Button("Cadastrar");
+        Button consultar = new Button("Consultar ID");
+        Button alterar = new Button("Alterar");
+        Button excluir = new Button("Excluir");
+        Button voltar = new Button("Voltar");
 
-        tituloLista.getStyleClass().add("subtitulo-tela");
-
-        listaCategorias = new ListView<String>();
-        listaCategorias.setPrefHeight(190);
-
-        Button botaoCarregar =
-                new Button("Carregar dados");
-
-        Button botaoAlterar =
-                new Button("Alterar");
-
-        Button botaoExcluir =
-                new Button("Excluir");
-
-        botaoCarregar.getStyleClass().add("botao-acao");
-        botaoCarregar.getStyleClass().add("botao-carregar");
-
-        botaoAlterar.getStyleClass().add("botao-acao");
-        botaoAlterar.getStyleClass().add("botao-alterar");
-
-        botaoExcluir.getStyleClass().add("botao-acao");
-        botaoExcluir.getStyleClass().add("botao-excluir");
-
-        botaoCadastrar.setOnAction(
+        cadastrar.setOnAction(
                 evento -> cadastrar()
         );
 
-        botaoCarregar.setOnAction(
-                evento -> carregarSelecionada()
+        consultar.setOnAction(
+                evento -> consultar()
         );
 
-        botaoAlterar.setOnAction(
+        alterar.setOnAction(
                 evento -> alterar()
         );
 
-        botaoExcluir.setOnAction(
+        excluir.setOnAction(
                 evento -> excluir()
         );
 
-        HBox painelAcoes = new HBox(10);
-        painelAcoes.setAlignment(Pos.CENTER);
+        voltar.setOnAction(
+                evento -> janela.close()
+        );
 
-        painelAcoes.getChildren().add(botaoCarregar);
-        painelAcoes.getChildren().add(botaoAlterar);
-        painelAcoes.getChildren().add(botaoExcluir);
+        HBox botoes = new HBox(10);
+        botoes.setAlignment(Pos.CENTER);
 
-        VBox formulario = new VBox(10);
-        formulario.setAlignment(Pos.CENTER_LEFT);
-        formulario.getStyleClass().add("formulario");
+        botoes.getChildren().add(cadastrar);
+        botoes.getChildren().add(consultar);
+        botoes.getChildren().add(alterar);
+        botoes.getChildren().add(excluir);
+        botoes.getChildren().add(voltar);
 
-        formulario.getChildren().add(titulo);
-        formulario.getChildren().add(nome);
-        formulario.getChildren().add(campoNome);
-        formulario.getChildren().add(descricao);
-        formulario.getChildren().add(campoDescricao);
-        formulario.getChildren().add(publicoAlvo);
-        formulario.getChildren().add(campoPublicoAlvo);
-        formulario.getChildren().add(botaoCadastrar);
-        formulario.getChildren().add(mensagem);
-        formulario.getChildren().add(tituloLista);
-        formulario.getChildren().add(listaCategorias);
-        formulario.getChildren().add(painelAcoes);
+        VBox conteudo = new VBox(12);
+        conteudo.setAlignment(Pos.CENTER);
+        conteudo.getStyleClass().add("formulario");
+
+        conteudo.getChildren().add(titulo);
+        conteudo.getChildren().add(formulario);
+        conteudo.getChildren().add(botoes);
+        conteudo.getChildren().add(mensagem);
+        conteudo.getChildren().add(tabela);
 
         VBox fundo = new VBox();
         fundo.setAlignment(Pos.CENTER);
-        fundo.getChildren().add(formulario);
+        fundo.getChildren().add(conteudo);
 
-        Scene cena = new Scene(fundo, 760, 760);
+        Scene cena = new Scene(fundo, 850, 650);
 
         cena.getStylesheets().add(
                 getClass()
@@ -131,15 +119,31 @@ public class TelaCategoria {
                         .toExternalForm()
         );
 
-        janelaCategoria.setTitle(
-                "Viewritiba - Categorias"
+        janela.setTitle("Viewritiba - Categorias");
+        janela.setScene(cena);
+
+        atualizarTabela();
+
+        janela.show();
+    }
+
+    private void adicionarCampo(
+            GridPane painel,
+            String texto,
+            TextField campo,
+            int linha
+    ) {
+        painel.add(
+                new Label(texto),
+                0,
+                linha
         );
 
-        janelaCategoria.setScene(cena);
-
-        atualizarLista();
-
-        janelaCategoria.show();
+        painel.add(
+                campo,
+                1,
+                linha
+        );
     }
 
     private void cadastrar() {
@@ -147,84 +151,64 @@ public class TelaCategoria {
             return;
         }
 
-        int id = gerarId();
-
         Categoria categoria = new Categoria(
-                id,
-                campoNome.getText().trim(),
-                campoDescricao.getText().trim(),
-                campoPublicoAlvo.getText().trim()
+                gerarId(),
+                nome.getText().trim(),
+                descricao.getText().trim(),
+                publicoAlvo.getText().trim()
         );
 
         dados.getCategorias().add(categoria);
         dados.salvar();
 
         limparCampos();
-        atualizarLista();
+        atualizarTabela();
 
         mensagem.setText(
                 "Categoria cadastrada com sucesso!"
         );
     }
 
-    private void carregarSelecionada() {
-        Categoria categoria =
-                obterCategoriaSelecionada();
+    private void consultar() {
+        Categoria categoria = buscarPorId();
 
         if (categoria == null) {
             return;
         }
 
-        categoriaEmAlteracao = categoria;
-
-        campoNome.setText(
-                categoria.getNome()
-        );
-
-        campoDescricao.setText(
-                categoria.getDescricao()
-        );
-
-        campoPublicoAlvo.setText(
-                categoria.getPublicoAlvo()
-        );
+        nome.setText(categoria.getNome());
+        descricao.setText(categoria.getDescricao());
+        publicoAlvo.setText(categoria.getPublicoAlvo());
 
         mensagem.setText(
-                "Dados carregados. Altere os campos desejados."
+                "Categoria encontrada."
         );
     }
 
     private void alterar() {
-        if (categoriaEmAlteracao == null) {
-            mensagem.setText(
-                    "Selecione e carregue uma categoria."
-            );
+        Categoria categoria = buscarPorId();
 
+        if (
+                categoria == null ||
+                        !camposPreenchidos()
+        ) {
             return;
         }
 
-        if (!camposPreenchidos()) {
-            return;
-        }
-
-        categoriaEmAlteracao.setNome(
-                campoNome.getText().trim()
+        categoria.setNome(
+                nome.getText().trim()
         );
 
-        categoriaEmAlteracao.setDescricao(
-                campoDescricao.getText().trim()
+        categoria.setDescricao(
+                descricao.getText().trim()
         );
 
-        categoriaEmAlteracao.setPublicoAlvo(
-                campoPublicoAlvo.getText().trim()
+        categoria.setPublicoAlvo(
+                publicoAlvo.getText().trim()
         );
 
         dados.salvar();
-
-        categoriaEmAlteracao = null;
-
-        limparCampos();
-        atualizarLista();
+        atualizarTabela();
 
         mensagem.setText(
                 "Categoria alterada com sucesso!"
@@ -232,62 +216,79 @@ public class TelaCategoria {
     }
 
     private void excluir() {
-        Categoria categoria =
-                obterCategoriaSelecionada();
+        Categoria categoria = buscarPorId();
 
         if (categoria == null) {
+            return;
+        }
+
+        if (categoriaEmUso(categoria)) {
+            mensagem.setText(
+                    "Categoria vinculada a um evento."
+            );
+
             return;
         }
 
         dados.getCategorias().remove(categoria);
         dados.salvar();
 
-        if (categoria == categoriaEmAlteracao) {
-            categoriaEmAlteracao = null;
-        }
-
         limparCampos();
-        atualizarLista();
+        atualizarTabela();
 
         mensagem.setText(
                 "Categoria excluída com sucesso!"
         );
     }
 
-    private Categoria obterCategoriaSelecionada() {
-        int indice = listaCategorias
-                .getSelectionModel()
-                .getSelectedIndex();
+    private Categoria buscarPorId() {
+        try {
+            int numero = Integer.parseInt(
+                    id.getText().trim()
+            );
 
-        if (
-                indice < 0 ||
-                        indice >= dados.getCategorias().size()
-        ) {
+            for (Categoria categoria : dados.getCategorias()) {
+                if (categoria.getId() == numero) {
+                    return categoria;
+                }
+            }
+
+        } catch (NumberFormatException erro) {
             mensagem.setText(
-                    "Selecione uma categoria na lista."
+                    "Informe um ID numérico."
             );
 
             return null;
         }
 
-        return dados.getCategorias().get(indice);
+        mensagem.setText(
+                "Categoria não encontrada."
+        );
+
+        return null;
+    }
+
+    private boolean categoriaEmUso(Categoria categoria) {
+        for (Evento evento : dados.getEventos()) {
+            if (
+                    evento.getCategoria() != null &&
+                            evento.getCategoria().getId() == categoria.getId()
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean camposPreenchidos() {
-        String nome = campoNome.getText().trim();
-        String descricao =
-                campoDescricao.getText().trim();
-
-        String publicoAlvo =
-                campoPublicoAlvo.getText().trim();
-
         if (
-                nome.equals("") ||
-                        descricao.equals("") ||
-                        publicoAlvo.equals("")
+                nome.getText().trim().equals("") ||
+                        descricao.getText().trim().equals("") ||
+                        publicoAlvo.getText().trim().equals("")
         ) {
             mensagem.setText(
-                    "Preencha todos os campos obrigatórios."
+                    "Preencha todos os campos."
             );
 
             return false;
@@ -296,51 +297,105 @@ public class TelaCategoria {
         return true;
     }
 
-    private void limparCampos() {
-        campoNome.clear();
-        campoDescricao.clear();
-        campoPublicoAlvo.clear();
+    private void atualizarTabela() {
+        tabela.getChildren().clear();
 
-        listaCategorias
-                .getSelectionModel()
-                .clearSelection();
-    }
-
-    private void atualizarLista() {
-        listaCategorias.getItems().clear();
+        String[] cabecalho = {
+                "ID",
+                "Nome",
+                "Descrição",
+                "Público-alvo"
+        };
 
         for (
-                Categoria categoria :
-                dados.getCategorias()
+                int coluna = 0;
+                coluna < cabecalho.length;
+                coluna++
         ) {
-            String item =
-                    categoria.getId() + " | " +
-                            categoria.getNome() + " | " +
-                            categoria.getDescricao() + " | " +
-                            categoria.getPublicoAlvo();
-
-            listaCategorias.getItems().add(item);
+            tabela.add(
+                    criarCelula(
+                            cabecalho[coluna],
+                            true
+                    ),
+                    coluna,
+                    0
+            );
         }
 
-        if (dados.getCategorias().size() == 0) {
-            listaCategorias.getItems().add(
-                    "Nenhuma categoria cadastrada."
+        int linha = 1;
+
+        for (Categoria categoria : dados.getCategorias()) {
+            String[] valores = {
+                    "" + categoria.getId(),
+                    categoria.getNome(),
+                    categoria.getDescricao(),
+                    categoria.getPublicoAlvo()
+            };
+
+            for (
+                    int coluna = 0;
+                    coluna < valores.length;
+                    coluna++
+            ) {
+                tabela.add(
+                        criarCelula(
+                                valores[coluna],
+                                false
+                        ),
+                        coluna,
+                        linha
+                );
+            }
+
+            linha++;
+        }
+
+        if (linha == 1) {
+            tabela.add(
+                    new Label(
+                            "Nenhuma categoria cadastrada."
+                    ),
+                    0,
+                    1
             );
         }
     }
 
-    private int gerarId() {
-        int maiorId = 0;
+    private Label criarCelula(
+            String texto,
+            boolean cabecalho
+    ) {
+        Label celula = new Label(texto);
 
-        for (
-                Categoria categoria :
-                dados.getCategorias()
-        ) {
-            if (categoria.getId() > maiorId) {
-                maiorId = categoria.getId();
+        if (cabecalho) {
+            celula
+                    .getStyleClass()
+                    .add("cabecalho-tabela");
+        } else {
+            celula
+                    .getStyleClass()
+                    .add("celula-tabela");
+        }
+
+        return celula;
+    }
+
+    private void limparCampos() {
+        id.clear();
+        nome.clear();
+        descricao.clear();
+        publicoAlvo.clear();
+    }
+
+    private int gerarId() {
+        int maior = 0;
+
+        for (Categoria categoria : dados.getCategorias()) {
+            if (categoria.getId() > maior) {
+                maior = categoria.getId();
             }
         }
 
-        return maiorId + 1;
+        return maior + 1;
     }
 }

@@ -8,6 +8,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 
 public class TelaEvento {
     private Dados dados;
@@ -34,29 +38,30 @@ public class TelaEvento {
         formulario.setHgap(10);
         formulario.setVgap(10);
         formulario.setPadding(new Insets(10));
-        adicionarCampo(formulario, "ID:", id, 0);
+        adicionarCampo(formulario, "ID para consultar, alterar ou excluir:", id, 0);
         adicionarCampo(formulario, "Titulo:", titulo, 1);
         adicionarCampo(formulario, "Descricao:", descricao, 2);
         adicionarCampo(formulario, "Data e hora:", dataHora, 3);
         adicionarCampo(formulario, "Local:", local, 4);
         adicionarCampo(formulario, "Categoria:", categoria, 5);
 
-        id.setPromptText("Informe para consultar, alterar ou excluir");
-        dataHora.setPromptText("DD/MM/AAAA HH:MM");
-
         Button cadastrar = new Button("Cadastrar");
         Button consultar = new Button("Consultar ID");
         Button alterar = new Button("Alterar");
         Button excluir = new Button("Excluir");
+        Button voltar = new Button("Voltar");
         cadastrar.setOnAction(e -> cadastrar());
         consultar.setOnAction(e -> consultar());
         alterar.setOnAction(e -> alterar());
         excluir.setOnAction(e -> excluir());
 
-        HBox botoes = new HBox(10, cadastrar, consultar, alterar, excluir);
+        voltar.setOnAction(
+                evento -> janela.close()
+        );
+
+        HBox botoes = new HBox(10, cadastrar, consultar, alterar, excluir, voltar);
         botoes.setAlignment(Pos.CENTER);
 
-        pesquisa.setPromptText("Pesquisar titulo, descricao, local ou categoria");
         Button pesquisar = new Button("Pesquisar");
         Button todos = new Button("Mostrar todos");
         pesquisar.setOnAction(e -> atualizarTabela(pesquisa.getText().trim()));
@@ -65,7 +70,7 @@ public class TelaEvento {
             atualizarTabela("");
         });
 
-        HBox busca = new HBox(10, pesquisa, pesquisar, todos);
+        HBox busca = new HBox(10, new Label("Pesquisar:"), pesquisa, pesquisar, todos);
         busca.setAlignment(Pos.CENTER);
 
         VBox conteudo = new VBox(12, tituloTela, formulario,
@@ -89,7 +94,6 @@ public class TelaEvento {
     private void adicionarCampo(GridPane painel, String texto, TextField campo, int linha) {
         painel.add(new Label(texto), 0, linha);
         painel.add(campo, 1, linha);
-        campo.setPrefWidth(430);
     }
 
     private void cadastrar() {
@@ -175,25 +179,28 @@ public class TelaEvento {
             return false;
         }
         if (!dataHoraValida()) {
-            mensagem.setText("Use o formato DD/MM/AAAA HH:MM.");
+            mensagem.setText(
+                    "Informe uma data e hora futuras."
+            );
             return false;
         }
         return true;
     }
 
     private boolean dataHoraValida() {
-        String valor = dataHora.getText().trim();
-        if (valor.length() != 16 || valor.charAt(2) != '/' || valor.charAt(5) != '/'
-                || valor.charAt(10) != ' ' || valor.charAt(13) != ':') return false;
         try {
-            int dia = Integer.parseInt(valor.substring(0, 2));
-            int mes = Integer.parseInt(valor.substring(3, 5));
-            int ano = Integer.parseInt(valor.substring(6, 10));
-            int hora = Integer.parseInt(valor.substring(11, 13));
-            int minuto = Integer.parseInt(valor.substring(14, 16));
-            return dia >= 1 && dia <= 31 && mes >= 1 && mes <= 12 && ano > 0
-                    && hora >= 0 && hora <= 23 && minuto >= 0 && minuto <= 59;
-        } catch (NumberFormatException erro) {
+            DateTimeFormatter formato = DateTimeFormatter
+                    .ofPattern("dd/MM/uuuu HH:mm")
+                    .withResolverStyle(ResolverStyle.STRICT);
+
+            LocalDateTime dataEvento = LocalDateTime.parse(
+                    dataHora.getText().trim(),
+                    formato
+            );
+
+            return dataEvento.isAfter(LocalDateTime.now());
+
+        } catch (DateTimeParseException erro) {
             return false;
         }
     }
@@ -212,7 +219,7 @@ public class TelaEvento {
                     || evento.getDescricao().toLowerCase().contains(termo)
                     || evento.getLocal().toLowerCase().contains(termo)
                     || nomeCategoria.toLowerCase().contains(termo)) {
-                tabela.add(criarCelula(String.valueOf(evento.getId()), false), 0, linha);
+                tabela.add(criarCelula("" + evento.getId(), false), 0, linha);
                 tabela.add(criarCelula(evento.getTitulo(), false), 1, linha);
                 tabela.add(criarCelula(evento.getDescricao(), false), 2, linha);
                 tabela.add(criarCelula(evento.getDataHora(), false), 3, linha);
@@ -230,9 +237,11 @@ public class TelaEvento {
 
     private Label criarCelula(String texto, boolean cabecalho) {
         Label celula = new Label(texto);
-        celula.setWrapText(true);
-        celula.setPrefWidth(145);
-        celula.getStyleClass().add(cabecalho ? "cabecalho-tabela" : "celula-tabela");
+        if (cabecalho) {
+            celula.getStyleClass().add("cabecalho-tabela");
+        } else {
+            celula.getStyleClass().add("celula-tabela");
+        }
         return celula;
     }
 
