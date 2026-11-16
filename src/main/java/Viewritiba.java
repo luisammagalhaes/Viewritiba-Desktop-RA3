@@ -32,6 +32,13 @@ public class Viewritiba extends Application {
         Button botaoCategorias =
                 new Button("Gerenciar categorias");
 
+        botaoCategorias.setOnAction(evento -> {
+            TelaCategoria telaCategoria =
+                    new TelaCategoria(dados);
+
+            telaCategoria.mostrar();
+        });
+
         // Painel que organiza os elementos
         VBox painel = new VBox(15);
         painel.setAlignment(Pos.CENTER);

@@ -99,3 +99,123 @@
 .button:pressed {
     -fx-background-color: #d64b35;
 }
+
+.formulario {
+    -fx-background-color: rgba(255, 255, 255, 0.97);
+    -fx-background-radius: 26;
+    -fx-border-radius: 26;
+    -fx-border-color: rgba(255, 255, 255, 0.90);
+    -fx-border-width: 1;
+
+    -fx-padding: 38;
+    -fx-spacing: 10;
+
+    -fx-max-width: 470;
+
+    -fx-effect: dropshadow(
+            gaussian,
+            rgba(121, 52, 35, 0.20),
+            28,
+            0.15,
+            0,
+            10
+    );
+}
+
+.titulo-tela {
+    -fx-font-size: 27px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #242424;
+    -fx-padding: 0 0 12 0;
+}
+
+.label {
+    -fx-text-fill: #242424;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+}
+
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #e6dad5;
+    -fx-border-radius: 13;
+    -fx-background-radius: 13;
+    -fx-padding: 12 15;
+    -fx-font-size: 14px;
+}
+
+.text-field:focused {
+    -fx-border-color: #ff7057;
+    -fx-border-width: 2;
+}
+
+.mensagem {
+    -fx-text-fill: #e85a43;
+    -fx-font-weight: 700;
+    -fx-padding: 8 0 0 0;
+}
+
+.subtitulo-tela {
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #242424;
+    -fx-padding: 18 0 4 0;
+}
+
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #e6dad5;
+    -fx-border-radius: 13;
+    -fx-background-radius: 13;
+    -fx-padding: 5;
+}
+
+.list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #242424;
+    -fx-font-size: 13px;
+    -fx-padding: 10;
+}
+
+.list-cell:selected {
+    -fx-background-color: #fff0ea;
+    -fx-text-fill: #e85a43;
+}
+
+.list-cell:hover {
+    -fx-background-color: #fff8f5;
+}
+
+.botao-acao {
+    -fx-min-width: 130;
+    -fx-padding: 10 13;
+    -fx-font-size: 13px;
+    -fx-effect: none;
+}
+
+.botao-carregar {
+    -fx-background-color: #fff0ea;
+    -fx-text-fill: #e85a43;
+}
+
+.botao-carregar:hover {
+    -fx-background-color: #ffdfd5;
+}
+
+.botao-alterar {
+    -fx-background-color: #edf3ff;
+    -fx-text-fill: #2563eb;
+}
+
+.botao-alterar:hover {
+    -fx-background-color: #dce8ff;
+}
+
+.botao-excluir {
+    -fx-background-color: #ffebeb;
+    -fx-text-fill: #c62828;
+}
+
+.botao-excluir:hover {
+    -fx-background-color: #ffd8d8;
+}
