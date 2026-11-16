@@ -142,6 +142,7 @@ public class TelaEvento {
         Evento evento = buscarEventoPorId();
         if (evento == null) return;
         dados.getEventos().remove(evento);
+        dados.getComentarios().removeIf(c -> c.getEventoId() == evento.getId());
         dados.salvar();
         limparCampos();
         atualizarTabela("");
@@ -206,7 +207,7 @@ public class TelaEvento {
 
     private void atualizarTabela(String texto) {
         tabela.getChildren().clear();
-        String[] cabecalho = {"ID", "Titulo", "Descricao", "Data", "Local", "Categoria"};
+        String[] cabecalho = {"ID", "Titulo", "Descricao", "Data", "Local", "Categoria", "Ações"};
         for (int coluna = 0; coluna < cabecalho.length; coluna++)
             tabela.add(criarCelula(cabecalho[coluna], true), coluna, 0);
 
@@ -224,10 +225,14 @@ public class TelaEvento {
                 tabela.add(criarCelula(evento.getDataHora(), false), 3, linha);
                 tabela.add(criarCelula(evento.getLocal(), false), 4, linha);
                 tabela.add(criarCelula(nomeCategoria, false), 5, linha);
+                Button botaoComentarios = new Button("Comentarios");
+                botaoComentarios.setStyle("-fx-min-width: 145; -fx-padding: 13 10;");
+                botaoComentarios.setOnAction(e -> new TelaComentario(dados, evento).mostrar());
+                tabela.add(botaoComentarios, 6, linha);
                 linha++;
             }
         }
-        if (linha == 1) tabela.add(new Label("Nenhum evento encontrado."), 0, 1, 6, 1);
+        if (linha == 1) tabela.add(new Label("Nenhum evento encontrado."), 0, 1, 7, 1);
     }
 
     private Label criarCelula(String texto, boolean cabecalho) {

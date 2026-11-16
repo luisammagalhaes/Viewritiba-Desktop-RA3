@@ -32,6 +32,16 @@ public class Viewritiba extends Application {
         Button botaoCategorias =
                 new Button("Gerenciar categorias");
 
+        Button botaoContas =
+                new Button("Gerenciar contas");
+
+        botaoContas.setOnAction(evento -> {
+            TelaConta telaConta =
+                    new TelaConta(dados);
+
+            telaConta.mostrar();
+        });
+
         botaoCategorias.setOnAction(evento -> {
             TelaCategoria telaCategoria =
                     new TelaCategoria(dados);
@@ -55,6 +65,7 @@ public class Viewritiba extends Application {
         painel.getChildren().add(subtitulo);
         painel.getChildren().add(botaoEventos);
         painel.getChildren().add(botaoCategorias);
+        painel.getChildren().add(botaoContas);
 
         // Fundo da tela
         BorderPane fundo = new BorderPane();
