@@ -14,7 +14,8 @@ public class TelaComentario {
     private Evento evento;
     private TextField id = new TextField();
     private TextField nota = new TextField();
-    private TextField texto = new TextField();
+    private TextField titulo = new TextField();
+    private TextField descricao = new TextField();
     private TextField pesquisa = new TextField();
     private Label mensagem = new Label();
     private GridPane tabela = new GridPane();
@@ -35,7 +36,8 @@ public class TelaComentario {
         formulario.setPadding(new Insets(10));
         adicionarCampo(formulario, "ID:", id, 0);
         adicionarCampo(formulario, "Nota (1 a 5):", nota, 1);
-        adicionarCampo(formulario, "Comentario:", texto, 2);
+        adicionarCampo(formulario, "Titulo:", titulo, 2);
+        adicionarCampo(formulario, "Descricao:", descricao, 3);
 
         id.setPromptText("Informe para consultar, alterar ou excluir");
 
@@ -51,7 +53,7 @@ public class TelaComentario {
         HBox botoes = new HBox(10, cadastrar, consultar, alterar, excluir);
         botoes.setAlignment(Pos.CENTER);
 
-        pesquisa.setPromptText("Pesquisar no comentario");
+        pesquisa.setPromptText("Pesquisar no titulo ou na descricao");
         Button pesquisar = new Button("Pesquisar");
         Button todos = new Button("Mostrar todos");
         pesquisar.setOnAction(e -> atualizarTabela(pesquisa.getText().trim()));
@@ -89,7 +91,8 @@ public class TelaComentario {
     private void cadastrar() {
         if (!camposValidos()) return;
         Comentario comentario = new Comentario(gerarId(), evento.getId(),
-                Integer.parseInt(nota.getText().trim()), texto.getText().trim());
+                Integer.parseInt(nota.getText().trim()), titulo.getText().trim(),
+                descricao.getText().trim());
         dados.getComentarios().add(comentario);
         dados.salvar();
         limparCampos();
@@ -101,7 +104,8 @@ public class TelaComentario {
         Comentario comentario = buscarPorId();
         if (comentario == null) return;
         nota.setText(String.valueOf(comentario.getNota()));
-        texto.setText(comentario.getTexto());
+        titulo.setText(comentario.getTitulo());
+        descricao.setText(comentario.getDescricao());
         mensagem.setText("Comentario encontrado.");
     }
 
@@ -109,7 +113,8 @@ public class TelaComentario {
         Comentario comentario = buscarPorId();
         if (comentario == null || !camposValidos()) return;
         comentario.setNota(Integer.parseInt(nota.getText().trim()));
-        comentario.setTexto(texto.getText().trim());
+        comentario.setTitulo(titulo.getText().trim());
+        comentario.setDescricao(descricao.getText().trim());
         dados.salvar();
         atualizarTabela("");
         mensagem.setText("Comentario alterado com sucesso!");
@@ -140,7 +145,8 @@ public class TelaComentario {
     }
 
     private boolean camposValidos() {
-        if (nota.getText().trim().equals("") || texto.getText().trim().equals("")) {
+        if (nota.getText().trim().equals("") || titulo.getText().trim().equals("")
+                || descricao.getText().trim().equals("")) {
             mensagem.setText("Preencha todos os campos.");
             return false;
         }
@@ -159,28 +165,30 @@ public class TelaComentario {
 
     private void atualizarTabela(String busca) {
         tabela.getChildren().clear();
-        String[] cabecalho = {"ID", "Nota", "Comentario"};
+        String[] cabecalho = {"ID", "Titulo", "Nota", "Descricao"};
         for (int coluna = 0; coluna < cabecalho.length; coluna++)
-            tabela.add(criarCelula(cabecalho[coluna], true, coluna == 2), coluna, 0);
+            tabela.add(criarCelula(cabecalho[coluna], true, coluna), coluna, 0);
 
         int linha = 1;
         String termo = busca.toLowerCase();
         for (Comentario item : dados.getComentarios()) {
             if (item.getEventoId() != evento.getId()) continue;
-            if (termo.equals("") || item.getTexto().toLowerCase().contains(termo)) {
-                tabela.add(criarCelula(String.valueOf(item.getId()), false, false), 0, linha);
-                tabela.add(criarCelula(String.valueOf(item.getNota()), false, false), 1, linha);
-                tabela.add(criarCelula(item.getTexto(), false, true), 2, linha);
+            if (termo.equals("") || item.getTitulo().toLowerCase().contains(termo)
+                    || item.getDescricao().toLowerCase().contains(termo)) {
+                tabela.add(criarCelula(String.valueOf(item.getId()), false, 0), 0, linha);
+                tabela.add(criarCelula(item.getTitulo(), false, 1), 1, linha);
+                tabela.add(criarCelula(String.valueOf(item.getNota()), false, 2), 2, linha);
+                tabela.add(criarCelula(item.getDescricao(), false, 3), 3, linha);
                 linha++;
             }
         }
-        if (linha == 1) tabela.add(new Label("Nenhum comentario encontrado."), 0, 1, 3, 1);
+        if (linha == 1) tabela.add(new Label("Nenhum comentario encontrado."), 0, 1, 4, 1);
     }
 
-    private Label criarCelula(String conteudo, boolean cabecalho, boolean larga) {
+    private Label criarCelula(String conteudo, boolean cabecalho, int coluna) {
         Label celula = new Label(conteudo);
         celula.setWrapText(true);
-        celula.setPrefWidth(larga ? 500 : 100);
+        celula.setPrefWidth(coluna == 3 ? 400 : (coluna == 1 ? 200 : 100));
         celula.getStyleClass().add(cabecalho ? "cabecalho-tabela" : "celula-tabela");
         return celula;
     }
@@ -188,7 +196,8 @@ public class TelaComentario {
     private void limparCampos() {
         id.clear();
         nota.clear();
-        texto.clear();
+        titulo.clear();
+        descricao.clear();
     }
 
     private int gerarId() {

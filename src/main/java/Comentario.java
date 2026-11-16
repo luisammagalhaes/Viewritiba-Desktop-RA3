@@ -6,16 +6,18 @@ public class Comentario implements Serializable {
     private int id;
     private int eventoId;
     private int nota;
-    private String texto;
+    private String titulo;
+    private String descricao;
 
     public Comentario() {
     }
 
-    public Comentario(int id, int eventoId, int nota, String texto) {
+    public Comentario(int id, int eventoId, int nota, String titulo, String descricao) {
         this.id = id;
         this.eventoId = eventoId;
         this.nota = nota;
-        this.texto = texto;
+        this.titulo = titulo;
+        this.descricao = descricao;
     }
 
     public int getId() {
@@ -42,11 +44,19 @@ public class Comentario implements Serializable {
         this.nota = nota;
     }
 
-    public String getTexto() {
-        return texto;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setTexto(String texto) {
-        this.texto = texto;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 }
