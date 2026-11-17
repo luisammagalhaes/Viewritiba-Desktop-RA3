@@ -39,7 +39,7 @@ public class Participante implements Serializable {
         return email;
     }
 
-    public void settEmail(String email){
+    public void setEmail(String email){
         this.email = email;
     }
 
@@ -51,11 +51,15 @@ public class Participante implements Serializable {
         this.senha = senha;
     }
 
-    public  boolean validarLogin(String identificador, String senhaInformada){
-        return identificador != null
-                && senhaInformada != null
-                && (email.equalsIgnoreCase(identificador)
-                || String.valueOf(id).equals(identificador))
-                && senha.equals(senhaInformada);
+    public boolean validarLogin(String identificador, String senhaInformada){
+        if (identificador == null || senhaInformada == null) {
+            return false;
+        }
+
+        boolean identificadorValido =
+                email.equalsIgnoreCase(identificador)
+                || String.valueOf(id).equals(identificador);
+
+        return identificadorValido && senha.equals(senhaInformada);
     }
 }
