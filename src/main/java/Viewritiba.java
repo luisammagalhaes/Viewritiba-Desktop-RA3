@@ -33,14 +33,17 @@ public class Viewritiba extends Application {
         Button botaoCategorias =
                 new Button("Gerenciar categorias");
 
-        Button botaoContas =
-                new Button("Gerenciar contas");
-
         Button botaoFavoritos =
                 new Button("Gerenciar favoritos");
 
         Button botaoCompartilhamentos =
                 new Button("Gerenciar compartilhamentos");
+
+        Button botaoLocais =
+                new Button("Gerenciar locais");
+
+        Button botaoPatrocinadores =
+                new Button("Gerenciar patrocinadores");
 
         // Ações dos botões
         botaoEventos.setOnAction(evento -> {
@@ -57,13 +60,6 @@ public class Viewritiba extends Application {
             telaCategoria.mostrar();
         });
 
-        botaoContas.setOnAction(evento -> {
-            TelaConta telaConta =
-                    new TelaConta(dados);
-
-            telaConta.mostrar();
-        });
-
         botaoFavoritos.setOnAction(evento -> {
             TelaFavorito telaFavorito =
                     new TelaFavorito(dados);
@@ -78,6 +74,20 @@ public class Viewritiba extends Application {
             telaCompartilhamento.mostrar();
         });
 
+        botaoLocais.setOnAction(evento -> {
+            TelaLocal telaLocal =
+                    new TelaLocal(dados);
+
+            telaLocal.mostrar();
+        });
+
+        botaoPatrocinadores.setOnAction(evento -> {
+            TelaPatrocinador telaPatrocinador =
+                    new TelaPatrocinador(dados);
+
+            telaPatrocinador.mostrar();
+        });
+
         // Painel que organiza os elementos
         VBox painel = new VBox(15);
         painel.setAlignment(Pos.CENTER);
@@ -88,9 +98,10 @@ public class Viewritiba extends Application {
                 subtitulo,
                 botaoEventos,
                 botaoCategorias,
-                botaoContas,
                 botaoFavoritos,
-                botaoCompartilhamentos
+                botaoCompartilhamentos,
+                botaoLocais,
+                botaoPatrocinadores
         );
 
         // Fundo da tela
@@ -98,7 +109,7 @@ public class Viewritiba extends Application {
         fundo.setCenter(painel);
 
         // Criação da cena
-        Scene cena = new Scene(fundo, 800, 550);
+        Scene cena = new Scene(fundo, 800, 700);
 
         // Ligação com o arquivo CSS
         cena.getStylesheets().add(

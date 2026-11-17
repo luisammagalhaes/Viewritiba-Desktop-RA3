@@ -1,4 +1,4 @@
-import java.io.Serializable
+import java.io.Serializable;
 
 public class Participante implements Serializable {
 
@@ -47,14 +47,14 @@ public class Participante implements Serializable {
         return senha;
     }
 
-    public void setSenha(String Senha){
+    public void setSenha(String senha){
         this.senha = senha;
     }
 
     public  boolean validarLogin(String identificador, String senhaInformada){
-        return indentificador ! = null
-                && senhaInformada ! = null
-                && (email.equalsIgnoreCase(identificador))
+        return identificador != null
+                && senhaInformada != null
+                && (email.equalsIgnoreCase(identificador)
                 || String.valueOf(id).equals(identificador))
                 && senha.equals(senhaInformada);
     }

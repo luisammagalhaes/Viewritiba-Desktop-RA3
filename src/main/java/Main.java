@@ -15,9 +15,11 @@ public class Main extends Application {
     private BorderPane painelPrincipal;
     private final OrganizadorView organizadorView = new OrganizadorView();
     private final ModeradorView moderadorView = new ModeradorView();
+    private Dados dados;
 
     @Override
     public void start(Stage palco) {
+        dados = Dados.carregar();
         painelPrincipal = new BorderPane();
 
         HBox menu = new HBox(15);
@@ -27,12 +29,14 @@ public class Main extends Application {
         Button btnInicio = new Button("Início");
         Button btnOrganizadores = new Button("Organizadores");
         Button btnModeradores = new Button("Moderadores");
+        Button btnSuspender = new Button("Suspender contas");
 
         btnInicio.setOnAction(e -> mostrarInicio());
         btnOrganizadores.setOnAction(e -> painelPrincipal.setCenter(organizadorView.criarTela()));
         btnModeradores.setOnAction(e -> painelPrincipal.setCenter(moderadorView.criarTela()));
+        btnSuspender.setOnAction(e -> new TelaSuspensaoConta(dados).mostrar());
 
-        menu.getChildren().addAll(btnInicio, btnOrganizadores, btnModeradores);
+        menu.getChildren().addAll(btnInicio, btnOrganizadores, btnModeradores, btnSuspender);
         painelPrincipal.setTop(menu);
 
         mostrarInicio();
