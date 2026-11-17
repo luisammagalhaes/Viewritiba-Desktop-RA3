@@ -22,8 +22,8 @@
     -fx-spacing: 18;
     -fx-alignment: center;
 
-    -fx-max-width: 470;
-    -fx-max-height: 330;
+    -fx-max-width: 650;
+    -fx-max-height: 540;
 
     -fx-effect:
             dropshadow(

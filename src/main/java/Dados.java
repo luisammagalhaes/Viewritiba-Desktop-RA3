@@ -25,6 +25,7 @@ public class Dados implements Serializable {
     private ArrayList<Patrocinador> patrocinadores;
 
     private ArrayList<ContaSuspensa> contasSuspensas;
+    private ArrayList<DetalhesEvento> detalhesEventos;
 
     public Dados() {
         eventos = new ArrayList<Evento>();
@@ -40,13 +41,20 @@ public class Dados implements Serializable {
         patrocinadores = new ArrayList<Patrocinador>();
 
         contasSuspensas = new ArrayList<ContaSuspensa>();
+        detalhesEventos = new ArrayList<DetalhesEvento>();
     }
 
     public ArrayList<Evento> getEventos() {
+        if (eventos == null) {
+            eventos = new ArrayList<Evento>();
+        }
         return eventos;
     }
 
     public ArrayList<Categoria> getCategorias() {
+        if (categorias == null) {
+            categorias = new ArrayList<Categoria>();
+        }
         return categorias;
     }
 
@@ -104,6 +112,13 @@ public class Dados implements Serializable {
             contasSuspensas = new ArrayList<ContaSuspensa>();
         }
         return contasSuspensas;
+    }
+
+    public ArrayList<DetalhesEvento> getDetalhesEventos() {
+        if (detalhesEventos == null) {
+            detalhesEventos = new ArrayList<DetalhesEvento>();
+        }
+        return detalhesEventos;
     }
 
     public void salvar() {

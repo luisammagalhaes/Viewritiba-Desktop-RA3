@@ -1,33 +1,48 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class DetalhesEvento implements Serializable{
+public class DetalhesEvento implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private int id;
     private Evento evento;
     private String organizador;
     private ArrayList<String> categorias;
     private ArrayList<String> comentarios;
 
-    public DetalhesEvento(){
+    public DetalhesEvento() {
         categorias = new ArrayList<String>();
         comentarios = new ArrayList<String>();
     }
 
-    public DetalhesEvento(Evento evento, String organizador, ArrayList<String> categorias, ArrayList<String> comentarios){
-
+    public DetalhesEvento(int id, Evento evento, String organizador,
+                          ArrayList<String> categorias, ArrayList<String> comentarios) {
+        this.id = id;
         this.evento = evento;
         this.organizador = organizador;
         this.categorias = categorias;
         this.comentarios = comentarios;
     }
 
-    public Evento getEvento(){
+    public DetalhesEvento(Evento evento, String organizador,
+                          ArrayList<String> categorias, ArrayList<String> comentarios) {
+        this(0, evento, organizador, categorias, comentarios);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Evento getEvento() {
         return evento;
     }
 
-    public void setEvento(Evento evento){
+    public void setEvento(Evento evento) {
         this.evento = evento;
     }
 
@@ -56,18 +71,18 @@ public class DetalhesEvento implements Serializable{
     }
 
     public String getTitulo() {
-        return evento.getTitulo();
+        return evento != null ? evento.getTitulo() : "";
     }
 
     public String getDescricao() {
-        return evento.getDescricao();
+        return evento != null ? evento.getDescricao() : "";
     }
 
     public String getDataHora() {
-        return evento.getDataHora();
+        return evento != null ? evento.getDataHora() : "";
     }
 
     public String getLocal() {
-        return evento.getLocal();
+        return evento != null ? evento.getLocal() : "";
     }
 }
