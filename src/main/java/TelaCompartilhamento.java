@@ -113,7 +113,7 @@ public class TelaCompartilhamento {
         );
         campoMensagem.setPrefRowCount(2);
 
-        // Preencher os campos ao selecionar um registro
+        // Preencher campos ao selecionar um compartilhamento
         tabela.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((obs, anterior, atual) -> {
@@ -175,7 +175,6 @@ public class TelaCompartilhamento {
 
         painel.setPadding(new Insets(20));
 
-        // Permite rolar a tela em janelas menores
         ScrollPane rolagem = new ScrollPane(painel);
         rolagem.setFitToWidth(true);
 
@@ -203,8 +202,6 @@ public class TelaCompartilhamento {
                 );
             }
 
-
-            // Gerar um ID automaticamente
             int novoId = 1;
 
             for (Compartilhamento c :
@@ -240,6 +237,7 @@ public class TelaCompartilhamento {
         tabela.getItems().setAll(
                 dados.getCompartilhamentos()
         );
+
         tabela.refresh();
     }
 
@@ -270,7 +268,6 @@ public class TelaCompartilhamento {
                 );
             }
 
-
             selecionado.setIdEvento(evento);
             selecionado.setIdRemetente(remetente);
             selecionado.setIdDestinatario(destinatario);
@@ -280,6 +277,14 @@ public class TelaCompartilhamento {
             dados.salvar();
             atualizarTabela();
             limparCampos();
+
+            Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+            alerta.setTitle("Viewritiba");
+            alerta.setHeaderText(null);
+            alerta.setContentText(
+                    "Compartilhamento atualizado com sucesso!"
+            );
+            alerta.showAndWait();
 
         } catch (IllegalArgumentException ex) {
             mostrarErro(ex.getMessage());
@@ -296,11 +301,39 @@ public class TelaCompartilhamento {
             return;
         }
 
+        // Confirma antes de excluir
+        Alert confirmacao = new Alert(
+                Alert.AlertType.CONFIRMATION
+        );
+
+        confirmacao.setTitle("Viewritiba");
+        confirmacao.setHeaderText(null);
+        confirmacao.setContentText(
+                "Deseja excluir o compartilhamento selecionado?"
+        );
+
+        java.util.Optional<ButtonType> resposta =
+                confirmacao.showAndWait();
+
+        if (resposta.isEmpty()
+                || resposta.get() != ButtonType.OK) {
+            return;
+        }
+
         dados.getCompartilhamentos().remove(selecionado);
         dados.salvar();
 
         atualizarTabela();
         limparCampos();
+
+        // Mensagem de sucesso após excluir
+        Alert alerta = new Alert(Alert.AlertType.INFORMATION);
+        alerta.setTitle("Viewritiba");
+        alerta.setHeaderText(null);
+        alerta.setContentText(
+                "Compartilhamento excluído com sucesso!"
+        );
+        alerta.showAndWait();
     }
 
     // Validação dos IDs
@@ -337,41 +370,35 @@ public class TelaCompartilhamento {
     }
 
     // Regras de compartilhamento
-
     private void validarCompartilhamento(
             int remetente,
             int destinatario,
             String mensagem
     ) {
-        // Verifica se o remetente existe
         if (!contaExiste(remetente)) {
             throw new IllegalArgumentException(
                     "O remetente informado não está cadastrado."
             );
         }
 
-        // Verifica se o destinatário existe
         if (!contaExiste(destinatario)) {
             throw new IllegalArgumentException(
                     "O destinatário informado não está cadastrado."
             );
         }
 
-        // Impede compartilhar consigo mesmo
         if (remetente == destinatario) {
             throw new IllegalArgumentException(
                     "O remetente não pode compartilhar consigo mesmo."
             );
         }
 
-        // Limita a mensagem a 200 caracteres
         if (mensagem.length() > 200) {
             throw new IllegalArgumentException(
                     "A mensagem deve ter no máximo 200 caracteres."
             );
         }
     }
-
 
     // Limpar formulário
     private void limparCampos() {
@@ -417,6 +444,4 @@ public class TelaCompartilhamento {
 
         return false;
     }
-
-
 }
