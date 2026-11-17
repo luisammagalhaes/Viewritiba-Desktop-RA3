@@ -54,17 +54,21 @@
                         <id>default-cli</id>
 
                         <configuration>
-                            <mainClass>Main</mainClass>
+                            <mainClass>Viewritiba</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>
-=======
-                            <mainClass>
-                                Viewritiba
-                            </mainClass>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>moderacao</id>
+
+                        <configuration>
+                            <mainClass>Main</mainClass>
                         </configuration>
                     </execution>
                 </executions>

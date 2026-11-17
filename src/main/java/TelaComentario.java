@@ -1,24 +1,27 @@
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class TelaComentario {
-    private Dados dados;
-    private Evento evento;
-    private TextField id = new TextField();
-    private TextField nota = new TextField();
-    private TextField titulo = new TextField();
-    private TextField descricao = new TextField();
-    private TextField pesquisa = new TextField();
-    private Label mensagem = new Label();
-    private GridPane tabela = new GridPane();
+
+    private final Dados dados;
+    private final Evento evento;
+
+    private final TextField campoNota = new TextField();
+    private final TextField campoTitulo = new TextField();
+    private final TextField campoDescricao = new TextField();
+
+    private final TableView<Comentario> tabela = new TableView<>();
+    private final ObservableList<Comentario> lista =
+            FXCollections.observableArrayList();
+
+    private Comentario selecionado;
 
     public TelaComentario(Dados dados, Evento evento) {
         this.dados = dados;
@@ -27,183 +30,295 @@ public class TelaComentario {
 
     public void mostrar() {
         Stage janela = new Stage();
-        Label tituloTela = new Label("Comentarios - " + evento.getTitulo());
-        tituloTela.getStyleClass().add("titulo-tela");
+        janela.setTitle("Viewritiba - Comentários");
+
+        Label titulo = new Label("Comentários - " + evento.getTitulo());
+        titulo.getStyleClass().add("titulo-tela");
+
+        campoNota.setPromptText("Nota de 1 a 5");
+        campoTitulo.setPromptText("Título");
+        campoDescricao.setPromptText("Descrição");
 
         GridPane formulario = new GridPane();
         formulario.setHgap(10);
         formulario.setVgap(10);
-        formulario.setPadding(new Insets(10));
-        adicionarCampo(formulario, "ID:", id, 0);
-        adicionarCampo(formulario, "Nota (1 a 5):", nota, 1);
-        adicionarCampo(formulario, "Titulo:", titulo, 2);
-        adicionarCampo(formulario, "Descricao:", descricao, 3);
 
-        id.setPromptText("Informe para consultar, alterar ou excluir");
+        formulario.add(new Label("Nota:"), 0, 0);
+        formulario.add(campoNota, 1, 0);
+
+        formulario.add(new Label("Título:"), 0, 1);
+        formulario.add(campoTitulo, 1, 1);
+
+        formulario.add(new Label("Descrição:"), 0, 2);
+        formulario.add(campoDescricao, 1, 2);
+
+        configurarTabela();
 
         Button cadastrar = new Button("Cadastrar");
-        Button consultar = new Button("Consultar ID");
-        Button alterar = new Button("Alterar");
+        Button atualizar = new Button("Atualizar");
         Button excluir = new Button("Excluir");
-        cadastrar.setOnAction(e -> cadastrar());
-        consultar.setOnAction(e -> consultar());
-        alterar.setOnAction(e -> alterar());
-        excluir.setOnAction(e -> excluir());
+        Button limpar = new Button("Limpar");
 
-        HBox botoes = new HBox(10, cadastrar, consultar, alterar, excluir);
+        cadastrar.setOnAction(e -> cadastrar());
+        atualizar.setOnAction(e -> atualizar());
+        excluir.setOnAction(e -> excluir());
+        limpar.setOnAction(e -> limparCampos());
+
+        HBox botoes = new HBox(
+                10, cadastrar, atualizar, excluir, limpar
+        );
         botoes.setAlignment(Pos.CENTER);
 
-        pesquisa.setPromptText("Pesquisar no titulo ou na descricao");
-        Button pesquisar = new Button("Pesquisar");
-        Button todos = new Button("Mostrar todos");
-        pesquisar.setOnAction(e -> atualizarTabela(pesquisa.getText().trim()));
-        todos.setOnAction(e -> {
-            pesquisa.clear();
-            atualizarTabela("");
-        });
+        VBox conteudo = new VBox(
+                15, titulo, formulario, botoes, tabela
+        );
 
-        HBox busca = new HBox(10, pesquisa, pesquisar, todos);
-        busca.setAlignment(Pos.CENTER);
-
-        VBox conteudo = new VBox(12, tituloTela, formulario, botoes,
-                mensagem, busca, tabela);
+        conteudo.setPadding(new Insets(20));
         conteudo.setAlignment(Pos.CENTER);
-        conteudo.getStyleClass().add("formulario");
-        conteudo.getStyleClass().add("formulario-evento");
 
-        VBox fundo = new VBox(conteudo);
-        fundo.setAlignment(Pos.CENTER);
-        Scene cena = new Scene(fundo, 1050, 750);
-        cena.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        Scene cena = new Scene(conteudo, 900, 650);
 
-        janela.setTitle("Viewritiba - Comentarios");
+        var css = getClass().getResource("/style.css");
+        if (css != null) {
+            cena.getStylesheets().add(css.toExternalForm());
+        }
+
         janela.setScene(cena);
-        atualizarTabela("");
+
+        atualizarTabela();
         janela.show();
     }
 
-    private void adicionarCampo(GridPane painel, String rotulo, TextField campo, int linha) {
-        painel.add(new Label(rotulo), 0, linha);
-        painel.add(campo, 1, linha);
-        campo.setPrefWidth(430);
+    private void configurarTabela() {
+        TableColumn<Comentario, String> colunaId =
+                new TableColumn<>("ID");
+
+        colunaId.setCellValueFactory(d ->
+                new javafx.beans.property.SimpleStringProperty(
+                        String.valueOf(d.getValue().getId())
+                )
+        );
+
+        TableColumn<Comentario, String> colunaNota =
+                new TableColumn<>("Nota");
+
+        colunaNota.setCellValueFactory(d ->
+                new javafx.beans.property.SimpleStringProperty(
+                        String.valueOf(d.getValue().getNota())
+                )
+        );
+
+        TableColumn<Comentario, String> colunaTitulo =
+                new TableColumn<>("Título");
+
+        colunaTitulo.setCellValueFactory(d ->
+                new javafx.beans.property.SimpleStringProperty(
+                        d.getValue().getTitulo()
+                )
+        );
+
+        TableColumn<Comentario, String> colunaDescricao =
+                new TableColumn<>("Descrição");
+
+        colunaDescricao.setCellValueFactory(d ->
+                new javafx.beans.property.SimpleStringProperty(
+                        d.getValue().getDescricao()
+                )
+        );
+
+        tabela.getColumns().addAll(
+                colunaId,
+                colunaNota,
+                colunaTitulo,
+                colunaDescricao
+        );
+
+        tabela.setItems(lista);
+        tabela.setColumnResizePolicy(
+                TableView.CONSTRAINED_RESIZE_POLICY
+        );
+
+        tabela.getSelectionModel()
+                .selectedItemProperty()
+                .addListener((obs, anterior, atual) -> {
+                    selecionado = atual;
+
+                    if (atual != null) {
+                        campoNota.setText(
+                                String.valueOf(atual.getNota())
+                        );
+
+                        campoTitulo.setText(
+                                atual.getTitulo()
+                        );
+
+                        campoDescricao.setText(
+                                atual.getDescricao()
+                        );
+                    }
+                });
     }
 
     private void cadastrar() {
-        if (!camposValidos()) return;
-        Comentario comentario = new Comentario(gerarId(), evento.getId(),
-                Integer.parseInt(nota.getText().trim()), titulo.getText().trim(),
-                descricao.getText().trim());
+        Integer nota = lerNota();
+
+        if (nota == null || !camposPreenchidos()) {
+            return;
+        }
+
+        Comentario comentario = new Comentario(
+                gerarId(),
+                evento.getId(),
+                nota,
+                campoTitulo.getText().trim(),
+                campoDescricao.getText().trim()
+        );
+
         dados.getComentarios().add(comentario);
         dados.salvar();
+
+        atualizarTabela();
         limparCampos();
-        atualizarTabela("");
-        mensagem.setText("Comentario cadastrado com sucesso!");
+
+        mostrarInformacao("Comentário cadastrado com sucesso!");
     }
 
-    private void consultar() {
-        Comentario comentario = buscarPorId();
-        if (comentario == null) return;
-        nota.setText(String.valueOf(comentario.getNota()));
-        titulo.setText(comentario.getTitulo());
-        descricao.setText(comentario.getDescricao());
-        mensagem.setText("Comentario encontrado.");
-    }
+    private void atualizar() {
+        if (selecionado == null) {
+            mostrarErro("Selecione um comentário na tabela.");
+            return;
+        }
 
-    private void alterar() {
-        Comentario comentario = buscarPorId();
-        if (comentario == null || !camposValidos()) return;
-        comentario.setNota(Integer.parseInt(nota.getText().trim()));
-        comentario.setTitulo(titulo.getText().trim());
-        comentario.setDescricao(descricao.getText().trim());
+        Integer nota = lerNota();
+
+        if (nota == null || !camposPreenchidos()) {
+            return;
+        }
+
+        selecionado.setNota(nota);
+        selecionado.setTitulo(
+                campoTitulo.getText().trim()
+        );
+        selecionado.setDescricao(
+                campoDescricao.getText().trim()
+        );
+
         dados.salvar();
-        atualizarTabela("");
-        mensagem.setText("Comentario alterado com sucesso!");
+
+        atualizarTabela();
+        limparCampos();
+
+        mostrarInformacao("Comentário atualizado com sucesso!");
     }
 
     private void excluir() {
-        Comentario comentario = buscarPorId();
-        if (comentario == null) return;
-        dados.getComentarios().remove(comentario);
+        if (selecionado == null) {
+            mostrarErro("Selecione um comentário na tabela.");
+            return;
+        }
+
+        Alert confirmacao = new Alert(
+                Alert.AlertType.CONFIRMATION,
+                "Deseja excluir o comentário selecionado?",
+                ButtonType.YES,
+                ButtonType.NO
+        );
+
+        confirmacao.setHeaderText(null);
+
+        if (confirmacao.showAndWait()
+                .orElse(ButtonType.NO) != ButtonType.YES) {
+            return;
+        }
+
+        dados.getComentarios().remove(selecionado);
         dados.salvar();
+
+        atualizarTabela();
         limparCampos();
-        atualizarTabela("");
-        mensagem.setText("Comentario excluido com sucesso!");
+
+        mostrarInformacao("Comentário excluído com sucesso!");
     }
 
-    private Comentario buscarPorId() {
-        try {
-            int numero = Integer.parseInt(id.getText().trim());
-            for (Comentario item : dados.getComentarios()) {
-                if (item.getId() == numero && item.getEventoId() == evento.getId()) return item;
-            }
-        } catch (NumberFormatException erro) {
-            mensagem.setText("Informe um ID numerico.");
-            return null;
+    private boolean camposPreenchidos() {
+        if (campoTitulo.getText().trim().isEmpty()
+                || campoDescricao.getText().trim().isEmpty()) {
+            mostrarErro("Preencha o título e a descrição.");
+            return false;
         }
-        mensagem.setText("Comentario nao encontrado neste evento.");
-        return null;
-    }
 
-    private boolean camposValidos() {
-        if (nota.getText().trim().equals("") || titulo.getText().trim().equals("")
-                || descricao.getText().trim().equals("")) {
-            mensagem.setText("Preencha todos os campos.");
-            return false;
-        }
-        try {
-            int valor = Integer.parseInt(nota.getText().trim());
-            if (valor < 1 || valor > 5) {
-                mensagem.setText("A nota deve ser de 1 a 5.");
-                return false;
-            }
-        } catch (NumberFormatException erro) {
-            mensagem.setText("A nota deve ser um numero de 1 a 5.");
-            return false;
-        }
         return true;
     }
 
-    private void atualizarTabela(String busca) {
-        tabela.getChildren().clear();
-        String[] cabecalho = {"ID", "Titulo", "Nota", "Descricao"};
-        for (int coluna = 0; coluna < cabecalho.length; coluna++)
-            tabela.add(criarCelula(cabecalho[coluna], true, coluna), coluna, 0);
+    private Integer lerNota() {
+        try {
+            int valor = Integer.parseInt(
+                    campoNota.getText().trim()
+            );
 
-        int linha = 1;
-        String termo = busca.toLowerCase();
-        for (Comentario item : dados.getComentarios()) {
-            if (item.getEventoId() != evento.getId()) continue;
-            if (termo.equals("") || item.getTitulo().toLowerCase().contains(termo)
-                    || item.getDescricao().toLowerCase().contains(termo)) {
-                tabela.add(criarCelula(String.valueOf(item.getId()), false, 0), 0, linha);
-                tabela.add(criarCelula(item.getTitulo(), false, 1), 1, linha);
-                tabela.add(criarCelula(String.valueOf(item.getNota()), false, 2), 2, linha);
-                tabela.add(criarCelula(item.getDescricao(), false, 3), 3, linha);
-                linha++;
+            if (valor < 1 || valor > 5) {
+                mostrarErro("A nota deve ser de 1 a 5.");
+                return null;
             }
+
+            return valor;
+
+        } catch (NumberFormatException erro) {
+            mostrarErro("Informe uma nota numérica de 1 a 5.");
+            return null;
         }
-        if (linha == 1) tabela.add(new Label("Nenhum comentario encontrado."), 0, 1, 4, 1);
-    }
-
-    private Label criarCelula(String conteudo, boolean cabecalho, int coluna) {
-        Label celula = new Label(conteudo);
-        celula.setWrapText(true);
-        celula.setPrefWidth(coluna == 3 ? 400 : (coluna == 1 ? 200 : 100));
-        celula.getStyleClass().add(cabecalho ? "cabecalho-tabela" : "celula-tabela");
-        return celula;
-    }
-
-    private void limparCampos() {
-        id.clear();
-        nota.clear();
-        titulo.clear();
-        descricao.clear();
     }
 
     private int gerarId() {
         int maior = 0;
-        for (Comentario item : dados.getComentarios())
-            if (item.getId() > maior) maior = item.getId();
+
+        for (Comentario comentario : dados.getComentarios()) {
+            if (comentario.getId() > maior) {
+                maior = comentario.getId();
+            }
+        }
+
         return maior + 1;
+    }
+
+    // Mostra só os comentários do evento aberto
+    private void atualizarTabela() {
+        lista.clear();
+
+        for (Comentario comentario : dados.getComentarios()) {
+            if (comentario.getEventoId() == evento.getId()) {
+                lista.add(comentario);
+            }
+        }
+
+        tabela.refresh();
+    }
+
+    private void limparCampos() {
+        selecionado = null;
+        tabela.getSelectionModel().clearSelection();
+
+        campoNota.clear();
+        campoTitulo.clear();
+        campoDescricao.clear();
+    }
+
+    private void mostrarErro(String mensagem) {
+        Alert alerta = new Alert(Alert.AlertType.ERROR);
+        alerta.setTitle("Erro");
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensagem);
+        alerta.showAndWait();
+    }
+
+    private void mostrarInformacao(String mensagem) {
+        Alert alerta = new Alert(
+                Alert.AlertType.INFORMATION
+        );
+
+        alerta.setTitle("Viewritiba");
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensagem);
+        alerta.showAndWait();
     }
 }

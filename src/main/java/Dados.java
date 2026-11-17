@@ -20,6 +20,12 @@ public class Dados implements Serializable {
     private ArrayList<Favorito> favoritos;
     private ArrayList<Compartilhamento> compartilhamentos;
 
+    private ArrayList<Local> locais;
+    private ArrayList<Participante> participantes;
+    private ArrayList<Patrocinador> patrocinadores;
+
+    private ArrayList<ContaSuspensa> contasSuspensas;
+
     public Dados() {
         eventos = new ArrayList<Evento>();
         categorias = new ArrayList<Categoria>();
@@ -28,6 +34,12 @@ public class Dados implements Serializable {
 
         favoritos = new ArrayList<Favorito>();
         compartilhamentos = new ArrayList<Compartilhamento>();
+
+        locais = new ArrayList<Local>();
+        participantes = new ArrayList<Participante>();
+        patrocinadores = new ArrayList<Patrocinador>();
+
+        contasSuspensas = new ArrayList<ContaSuspensa>();
     }
 
     public ArrayList<Evento> getEventos() {
@@ -64,6 +76,34 @@ public class Dados implements Serializable {
             compartilhamentos = new ArrayList<Compartilhamento>();
         }
         return compartilhamentos;
+    }
+
+    public ArrayList<Local> getLocais() {
+        if (locais == null) {
+            locais = new ArrayList<Local>();
+        }
+        return locais;
+    }
+
+    public ArrayList<Participante> getParticipantes() {
+        if (participantes == null) {
+            participantes = new ArrayList<Participante>();
+        }
+        return participantes;
+    }
+
+    public ArrayList<Patrocinador> getPatrocinadores() {
+        if (patrocinadores == null) {
+            patrocinadores = new ArrayList<Patrocinador>();
+        }
+        return patrocinadores;
+    }
+
+    public ArrayList<ContaSuspensa> getContasSuspensas() {
+        if (contasSuspensas == null) {
+            contasSuspensas = new ArrayList<ContaSuspensa>();
+        }
+        return contasSuspensas;
     }
 
     public void salvar() {

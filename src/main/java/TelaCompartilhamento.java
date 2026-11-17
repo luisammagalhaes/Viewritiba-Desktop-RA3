@@ -375,13 +375,15 @@ public class TelaCompartilhamento {
             int destinatario,
             String mensagem
     ) {
-        if (!contaExiste(remetente)) {
+        // Verifica se o remetente existe
+        if (!participanteExiste(remetente)) {
             throw new IllegalArgumentException(
                     "O remetente informado não está cadastrado."
             );
         }
 
-        if (!contaExiste(destinatario)) {
+        // Verifica se o destinatário existe
+        if (!participanteExiste(destinatario)) {
             throw new IllegalArgumentException(
                     "O destinatário informado não está cadastrado."
             );
@@ -435,9 +437,9 @@ public class TelaCompartilhamento {
         return false;
     }
 
-    private boolean contaExiste(int idConta) {
-        for (Conta conta : dados.getContas()) {
-            if (conta.getId() == idConta) {
+    private boolean participanteExiste(int idParticipante) {
+        for (Participante participante : dados.getParticipantes()) {
+            if (participante.getId() == idParticipante) {
                 return true;
             }
         }
